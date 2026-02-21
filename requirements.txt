@@ -1,0 +1,18 @@
+# NexusAI MCP Server Dependencies
+
+# HTTP requests
+httpx>=0.27.0
+
+# HTML parsing
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+
+# Browser automation
+playwright>=1.40.0
+
+# FastAPI server
+fastapi>=0.109.0
+uvicorn>=0.27.0
+
+# Optional: caching
+# redis>=5.0.0

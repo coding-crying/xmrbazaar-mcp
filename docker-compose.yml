@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nexusai-mcp:
+    build: .
+    container_name: nexusai-mcp
+    ports:
+      - "8765:8765"  # HTTP API (optional)
+    environment:
+      - MCP_MODE=stdio  # or "http" for remote
+    volumes:
+      - ~/.cache/nexusai:/root/.cache/nexusai
+    # For stdio mode (Claude Desktop, etc.), use docker exec or mount stdin
+    # For HTTP mode, use the exposed port
+
+  # Alternative: HTTP server for OpenWebUI remote connection
+  nexusai-http:
+    build: .
+    container_name: nexusai-mcp-http
+    command: python -m nexusai_mcp.http_server
+    ports:
+      - "8765:8765"
+    environment:
+      - MCP_MODE=http
