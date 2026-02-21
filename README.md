@@ -1,143 +1,80 @@
 # XMRBazaar MCP Server
 
-An MCP (Model Context Protocol) server that gives LLMs tools to research products on XMRBazaar marketplace.
+Connects your LLM to XMRBazaar marketplace so you can search listings, check product details, verify sellers, and get AI-powered recommendations.
 
-## Features
+## What is this?
 
-- **search_market** — Find listings matching user interests
-- **get_item_details** — Deep dive into specific listings
-- **get_vendor_rating** — Verify seller trustworthiness
-- **analyze_match** — Score listings against user requirements
+An MCP (Model Context Protocol) server that gives your LLM tools to shop on XMRBazaar:
+
+- **search_market** — Find products
+- **get_item_details** — Full product info
+- **get_vendor_rating** — Check seller trust
+- **analyze_match** — Score against your needs
 
 ## Quick Start
 
-### Docker (Recommended)
+### Docker
 
 ```bash
-# Pull and run
 docker run -p 8765:8765 whywillwizardry/xmrbazaar-mcp
-
-# Or build locally
-docker build -t xmrbazaar-mcp .
-docker run -p 8765:8765 xmrbazaar-mcp
 ```
 
-### Python Directly
+### Python
 
 ```bash
 pip install -r requirements.txt
 python mcp_server.py
 ```
 
-## Docker Image
-
-```
-whywillwizardry/xmrbazaar-mcp:latest
-```
-
-Published on Docker Hub: https://hub.docker.com/r/whywillwizardry/xmrbazaar-mcp
-
-## Connecting to LLMs
+## Connect to Your LLM
 
 ### Claude Desktop
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "xmrbazaar": {
       "command": "docker",
-      "args": ["run", "--rm", "-i", "xmrbazaar/xmrbazaar-mcp"]
+      "args": ["run", "--rm", "-i", "whywillwizardry/xmrbazaar-mcp"]
     }
   }
 }
 ```
 
-### OpenWebUI
-
-1. Go to **Settings → Admin Panel → OpenAI/API**
-2. Add new "OAI Tools" connection:
-   - URL: `http://localhost:8765/v1`
-   - API Key: any (not required for local)
-
 ### Gemini CLI
 
 ```bash
-gemini mcp add xmrbazaar "docker run --rm -i xmrbazaar/xmrbazaar-mcp"
+gemini mcp add xmrbazaar "docker run --rm -i whywillwizardry/xmrbazaar-mcp"
 ```
 
-### LM Studio, Codex CLI, and others
+### OpenWebUI
 
-Start the HTTP server:
-```bash
-docker run -p 8765:8765 xmrbazaar/xmrbazaar-mcp
-```
+Add as "OAI Tools" at `http://localhost:8765/v1`
 
-Then connect using the HTTP endpoint: `http://localhost:8765`
+### LM Studio
 
-## Compatible with Local Models
+Connect to `http://localhost:8765`
 
-This MCP server works with **any LLM that supports MCP**, including:
+## Works With Any MCP LLM
 
-### Local Models (Ollama, LM Studio, etc.)
+- **Local:** Ollama, LM Studio, LocalAI
+- **Cloud:** Claude, Gemini, GPT-4
 
-- **Ollama** — Run locally with Ollama, connect via OpenWebUI
-- **LM Studio** — Add MCP server URL directly
-- **LocalAI** — Connect via OpenAI-compatible API
-
-### Cloud Models
-
-- **Claude** (Anthropic)
-- **Gemini** (Google)
-- **GPT-4** (OpenAI)
-
-The MCP protocol is model-agnostic — the LLM just needs MCP client support.
-
-## Usage Example
+## Example
 
 ```
-User: "Find me ThinkPads under $100 on XMRBazaar"
+You: Find me a ThinkPad under $100
 
 LLM → search_market("thinkpad")
-LLM → get_item_details(url)  
+LLM → get_item_details(url)
 LLM → analyze_match({price: $80}, {budget: 100})
-LLM → "Found one! ThinkPad X1 Carbon, $80, matches your budget"
+LLM: Found one! ThinkPad X1 Carbon, $80, good condition
 ```
 
-## Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| MCP_MODE | stdio | `stdio` (Claude Desktop) or `http` (remote) |
-| HEADLESS | true | Run browser headless |
-| CACHE_TTL | 3600 | Cache duration in seconds |
-
-## Architecture
+## Image
 
 ```
-User → LLM → MCP Server → XMRBazaar (scraped)
-         ↓
-    Tools:
-    • search_market      → Playwright scraper
-    • get_item_details   → Playwright scraper  
-    • get_vendor_rating → Playwright scraper
-    • analyze_match      → Local scoring
+whywillwizardry/xmrbazaar-mcp:latest
 ```
 
-## For Developers
-
-```bash
-# Build
-docker build -t xmrbazaar-mcp .
-
-# Push to Docker Hub
-docker push xmrbazaar/xmrbazaar-mcp:latest
-
-# Run with custom config
-docker run -e CACHE_TTL=7200 -p 8765:8765 xmrbazaar-mcp
-```
-
-## License
-
-MIT
+https://hub.docker.com/r/whywillwizardry/xmrbazaar-mcp

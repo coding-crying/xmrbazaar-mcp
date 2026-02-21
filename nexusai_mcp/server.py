@@ -421,14 +421,20 @@ def analyze_match(item_details: dict, user_requirements: dict) -> dict:
     Returns: Match score (0-100), pros, cons, recommendation.
     """
     
+    # Handle None inputs
+    if item_details is None:
+        item_details = {}
+    if user_requirements is None:
+        user_requirements = {}
+    
     score = 0
     max_score = 100
     pros = []
     cons = []
     
-    title = item_details.get("title", "").lower()
-    price = item_details.get("price", "0")
-    description = item_details.get("description", "").lower()
+    title = item_details.get("title", "") or ""
+    price = item_details.get("price", "0") or "0"
+    description = item_details.get("description", "") or ""
     
     # Extract price value
     price_match = re.search(r'\$?([\d,]+)', str(price))

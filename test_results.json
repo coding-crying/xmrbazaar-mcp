@@ -1,0 +1,94 @@
+{
+  "search_market": {
+    "thinkpad": {
+      "success": true,
+      "count": 5,
+      "has_results": true
+    },
+    "laptop": {
+      "success": true,
+      "count": 5,
+      "has_results": true
+    },
+    "graphics card": {
+      "success": true,
+      "count": 5,
+      "has_results": true
+    }
+  },
+  "get_item_details": {
+    "tested_urls": 2,
+    "results": [
+      {
+        "url": "https://xmrbazaar.com/listing/aCUB/",
+        "success": true,
+        "has_title": true,
+        "has_price": true,
+        "has_vendor": true
+      },
+      {
+        "url": "https://xmrbazaar.com/listing/pMsK/",
+        "success": true,
+        "has_title": true,
+        "has_price": true,
+        "has_vendor": true
+      }
+    ]
+  },
+  "analyze_match": [
+    {
+      "name": "Perfect match - ThinkPad under budget",
+      "score": 100,
+      "recommendation": "Highly recommended"
+    },
+    {
+      "name": "Over budget - High specs",
+      "score": 0,
+      "recommendation": "May not meet needs"
+    },
+    {
+      "name": "Partial match - Missing features",
+      "score": 0,
+      "recommendation": "May not meet needs"
+    },
+    {
+      "name": "Empty requirements",
+      "score": 20,
+      "recommendation": "May not meet needs"
+    }
+  ],
+  "error_handling": [
+    {
+      "test": "empty_analyze",
+      "handled": true
+    },
+    {
+      "test": "none_analyze",
+      "handled": false,
+      "error": "'NoneType' object has no attribute 'get'"
+    },
+    {
+      "test": "empty_search",
+      "handled": "exception_expected"
+    },
+    {
+      "test": "invalid_url",
+      "handled": "exception_expected"
+    }
+  ],
+  "cache_functionality": [
+    {
+      "test": "write_read",
+      "success": true
+    },
+    {
+      "test": "cache_miss",
+      "success": true
+    },
+    {
+      "test": "search_cache",
+      "success": false,
+      "error": "asyncio.run() cannot be called from a running event loop"
+    }
+  ]
+}
