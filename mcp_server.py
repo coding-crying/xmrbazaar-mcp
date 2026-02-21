@@ -45,10 +45,22 @@ app = Server("nexusai-marketplace")
 async def list_tools() -> list[Tool]:
     """Define available tools with detailed descriptions for LLM guidance."""
     
+    # System instruction for the LLM
+    SYSTEM_INSTRUCTION = """IMPORTANT: After calling search_market, always:
+1. Review the results for promising candidates
+2. Call get_item_details on items that match user's interests
+3. Check seller trust with get_vendor_rating when recommending
+4. Use analyze_match to score against user's stated requirements
+5. Present ranked results with reasoning, not just raw listings
+
+Don't just return search results - do the research to find the best match."""
+    
     return [
         Tool(
             name="search_market",
-            description="""Search marketplace for product listings.
+            description=f"""{SYSTEM_INSTRUCTION}
+
+Search marketplace for product listings.
 
 **WHEN TO USE:**
 - User asks about products in a category ("any ThinkPads for sale?")
@@ -76,7 +88,9 @@ User: "I need a laptop for coding"
         ),
         Tool(
             name="get_item_details",
-            description="""Get detailed information about a specific listing.
+            description=f"""{SYSTEM_INSTRUCTION}
+
+Get detailed information about a specific listing.
 
 **WHEN TO USE:**
 - After search_market returns candidates
@@ -93,7 +107,8 @@ User: "I need a laptop for coding"
 **EXAMPLE:**
 search_market returned: ThinkPad X1 Carbon for $200
 → Call: get_item_details(url="https://xmrbazaar.com/listing/...")
-→ Review: condition, specs, shipping, seller""",
+→ Review: condition, specs, shipping, seller
+→ Then call analyze_match""",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -132,7 +147,9 @@ get_item_details returned: seller "techdeals" with vendor_url
         ),
         Tool(
             name="analyze_match",
-            description="""Analyze how well a listing matches user requirements.
+            description=f"""{SYSTEM_INSTRUCTION}
+
+Analyze how well a listing matches user requirements.
 
 **WHEN TO USE:**
 - After getting item details
@@ -142,14 +159,14 @@ get_item_details returned: seller "techdeals" with vendor_url
 
 **HOW TO USE:**
 1. Get item details from get_item_details
-2. Ask user for their requirements (budget, condition, features)
+2. Ask user for their requirements (budget, condition, features) if not stated
 3. Pass both to analyze_match
 4. Present ranked results with match reasoning
 
 **EXAMPLE:**
 User: "Need laptop under $500, good condition"
-→ get_item_details → {title: "ThinkPad X1", price: "$450", condition: "Good"}
-→ Call: analyze_match(item_details={...}, user_requirements={budget_max: 500, condition: "good"})
+→ get_item_details → {{title: "ThinkPad X1", price: "$450", condition: "Good"}}
+→ Call: analyze_match(item_details={{...}}, user_requirements={{budget_max: 500, condition: "good"}})
 → Result: Score 85/100 - "Highly recommended" """,
             inputSchema={
                 "type": "object",
