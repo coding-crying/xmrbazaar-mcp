@@ -15,7 +15,7 @@ An MCP (Model Context Protocol) server that gives LLMs tools to research product
 
 ```bash
 # Pull and run
-docker run -p 8765:8765 xmrbazaar/xmrbazaar-mcp
+docker run -p 8765:8765 whywillwizardry/xmrbazaar-mcp
 
 # Or build locally
 docker build -t xmrbazaar-mcp .
@@ -32,10 +32,10 @@ python mcp_server.py
 ## Docker Image
 
 ```
-xmrbazaar/xmrbazaar-mcp:latest
+whywillwizardry/xmrbazaar-mcp:latest
 ```
 
-Published on Docker Hub: https://hub.docker.com/r/xmrbazaar/xmrbazaar-mcp
+Published on Docker Hub: https://hub.docker.com/r/whywillwizardry/xmrbazaar-mcp
 
 ## Connecting to LLMs
 
